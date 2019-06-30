@@ -1,0 +1,77 @@
+
+# maintainer: u1and0 <e01.ando60@gmail.com>
+# version 3.7 for docker version 18.06+
+# see https://docs.docker.com/compose/compose-file/
+# What for:
+#    docker in docker dev.env
+#    master: zsh & zplug env. Pairents for all docker image.
+#    python: python env. It can use ipython & jupyter
+#
+# Usage:
+#    docker-compose run master zsh
+#
+version: '3'
+services:
+    master:
+        image: "u1and0/myenv:latest"
+        tty: "true"
+        volumes:
+            - "${HOME}:/home/vagrant"
+            - "/mnt/e/Users/U1and0:/mnt"
+            - "/var/run/docker.sock:/var/run/docker.sock"
+        working_dir: "/home/vagrant"
+        environment:
+            - "HOST=master"
+        command: "zsh"
+
+    ipython:
+        image: "u1and0/pyenv:latest"
+        tty: "true"
+        volumes:
+            - "${HOME}:/home/vagrant"
+            - "/mnt/e/Users/U1and0:/mnt"
+        working_dir: "/home/vagrant/Dropbox/Program/python"
+        environment:
+            - "PYTHONPATH=/home/vagrant/Dropbox/Program/python"
+        command: "bash -c 'source /root/.pyenvrc && source activate && ipython'"
+
+    jupyter:
+        image: "u1and0/pyenv:jupyter"
+        volumes:
+            - "${HOME}:/home/vagrant"
+            - "/mnt/e/Users/U1and0:/mnt"
+        working_dir: "/home/vagrant/Dropbox/Program/python"
+        environment:
+            - "PYTHONPATH=/home/vagrant/Dropbox/Program/python"
+        command: "bash -c 'source /root/.pyenvrc && source activate && jupyter notebook --allow-root'"
+        ports:
+            - "8888:8888"
+
+    # neovim_python:
+    #     image: "u1and0/pyenv:latest"
+    #     tty: "true"
+    #     volumes:
+    #         - "${HOME}:/home/vagrant"
+    #         - "/mnt/e/Users/U1and0:/mnt"
+    #     working_dir: "/home/vagrant/Dropbox/Program/python"
+    #     environment:
+    #         - "HOST=py"
+    #     # command: "bash -c 'source /root/.pyenvrc && source activate && bash'"
+
+    vimgo:
+        image: "u1and0/vim-go:zplug1.2.0"
+        tty: "true"
+        working_dir: "/root/go/src"
+        volumes:
+            - "${HOME}:/home/vagrant"
+            - "/mnt/e/Users/U1and0:/mnt"
+        environment:
+            - "GO111MODULE=on"
+            - "HOST=go"
+        ports:
+            - "8080:8080"
+
+    # uplot:
+    #     image: "u1and0/uplot:latest"
+    #     ports:
+    #         - "8880:8880"
