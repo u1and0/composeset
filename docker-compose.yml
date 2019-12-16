@@ -1,4 +1,3 @@
-
 # maintainer: u1and0 <e01.ando60@gmail.com>
 # version 3.7 for docker version 18.06+
 # see https://docs.docker.com/compose/compose-file/
@@ -12,11 +11,14 @@
 #
 version: '3'
 services:
+
     master:
         image: "u1and0/myenv:latest"
         tty: "true"
         volumes:
             - "${HOME}:/home/vagrant"
+            - "${HOME}/.zsh_history:/root/.zsh_history"
+            - "${HOME}/yankring_history_v2.txt:/root/yankring_history_v2.txt"
             - "/mnt/e/Users/U1and0:/mnt"
             - "/var/run/docker.sock:/var/run/docker.sock"
         working_dir: "/home/vagrant"
@@ -24,18 +26,21 @@ services:
             - "HOST=master"
         command: "zsh"
 
-    ipython:
-        image: "u1and0/pyenv:latest"
-        tty: "true"
-        volumes:
-            - "${HOME}:/home/vagrant"
-            - "/mnt/e/Users/U1and0:/mnt"
-        working_dir: "/home/vagrant/Dropbox/Program/python"
-        environment:
-            - "PYTHONPATH=/home/vagrant/Dropbox/Program/python"
-        command: "bash -c 'source /root/.pyenvrc && source activate && ipython'"
+    # ipython:
+    #     image: "u1and0/pyenv:latest"
+    #     tty: "true"
+    #     volumes:
+    #         - "${HOME}:/home/vagrant"
+    #         - "/mnt/e/Users/U1and0:/mnt"
+    #     working_dir: "/home/vagrant/Dropbox/Program/python"
+    #     environment:
+    #         - "PYTHONPATH=/home/vagrant/Dropbox/Program/python"
+    #     entrypoint: "bash -c 'source /root/.pyenvrc && source activate'"
+    #     command: "ipython"
 
     jupyter:
+        # jupyter tagはpasswordを設定したイメージ
+        # [Jupyter on Dockerでパスワードの設定方法が分からないあなたへ](https://qiita.com/Yusuke-Shimizu/items/731ca71b3c4c3649ec7f)
         image: "u1and0/pyenv:jupyter"
         volumes:
             - "${HOME}:/home/vagrant"
@@ -59,17 +64,22 @@ services:
     #     # command: "bash -c 'source /root/.pyenvrc && source activate && bash'"
 
     vimgo:
-        image: "u1and0/vim-go:zplug1.2.0"
+        # update current binary image (!! Not coded infra !!)
+        image: "u1and0/vim-go:zplug1.2.0-r1"
         tty: "true"
         working_dir: "/root/go/src"
         volumes:
             - "${HOME}:/home/vagrant"
+            - "${HOME}/.zsh_history:/root/.zsh_history"
+            - "${HOME}/yankring_history_v2.txt:/root/yankring_history_v2.txt"
             - "/mnt/e/Users/U1and0:/mnt"
         environment:
             - "GO111MODULE=on"
             - "HOST=go"
         ports:
             - "8080:8080"
+        cap_add:
+            - "SYS_PTRACE" # for golang debugger
 
     # uplot:
     #     image: "u1and0/uplot:latest"
