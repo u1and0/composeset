@@ -3,79 +3,73 @@
 # see https://docs.docker.com/compose/compose-file/
 # What for:
 #    docker in docker dev.env
-#    master: zsh & zplug env. Pairents for all docker image.
-#    python: python env. It can use ipython & jupyter
+#
+#    * master: zsh & zplug env. Parents for all docker image.
+#    * jupyter: python env. It can use ipython & jupyter
+#    * vim-go: golang env.
 #
 # Usage:
-#    docker-compose run master zsh
+#	 $ cd /path/to/composeset
+#    $ docker-compose up
+#    $ docker exec -it composeset_master_1 zsh -l
+#
+# 	 # Login master container then...
+#    $ tmux
+#
+#    # Login go env
+#    $ docker exec -it composeset_vim-go_1 zsh -l
+#
+#    # Login python env
+# 	 $ docker exec -it composeset_jupyter_1 bash -c ". .bashrc && zsh"
+#
+#    # Login python env as ipython
+# 	 $ docker exec -it composeset_jupyter_1 bash -c ". .bashrc && ipython"
 #
 version: '3'
 services:
 
     master:
-        image: "u1and0/myenv:latest"
-        tty: "true"
+        image: "u1and0/docker:latest"
+        tty: true
         volumes:
-            - "${HOME}:/home/vagrant"
-            - "${HOME}/.zsh_history:/root/.zsh_history"
-            - "${HOME}/yankring_history_v2.txt:/root/yankring_history_v2.txt"
+            - "${HOME}/Dropbox:/home/u1and0/Dropbox"
+            - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
+            - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
             - "/mnt/e/Users/U1and0:/mnt"
             - "/var/run/docker.sock:/var/run/docker.sock"
-        working_dir: "/home/vagrant"
+        restart: "always"
         environment:
             - "HOST=master"
-        command: "zsh"
-
-    # ipython:
-    #     image: "u1and0/pyenv:latest"
-    #     tty: "true"
-    #     volumes:
-    #         - "${HOME}:/home/vagrant"
-    #         - "/mnt/e/Users/U1and0:/mnt"
-    #     working_dir: "/home/vagrant/Dropbox/Program/python"
-    #     environment:
-    #         - "PYTHONPATH=/home/vagrant/Dropbox/Program/python"
-    #     entrypoint: "bash -c 'source /root/.pyenvrc && source activate'"
-    #     command: "ipython"
 
     jupyter:
         # jupyter tagはpasswordを設定したイメージ
         # [Jupyter on Dockerでパスワードの設定方法が分からないあなたへ](https://qiita.com/Yusuke-Shimizu/items/731ca71b3c4c3649ec7f)
-        image: "u1and0/pyenv:jupyter"
+        image: "u1and0/python-conda:latest"
         volumes:
-            - "${HOME}:/home/vagrant"
-            - "/mnt/e/Users/U1and0:/mnt"
-        working_dir: "/home/vagrant/Dropbox/Program/python"
+            - "${HOME}/Dropbox:/home/u1and0/Dropbox"
+            - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
+            - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
+            - "/mnt/e/Users/U1and0/Dropbox:/mnt"
         environment:
-            - "PYTHONPATH=/home/vagrant/Dropbox/Program/python"
-        command: "bash -c 'source /root/.pyenvrc && source activate && jupyter notebook --allow-root'"
+            - "PYTHONPATH=/home/u1and0/Dropbox/Program/python"
+            - "HOST=conda"
+        command: "bash -c '. .bashrc && jupyter notebook'"
         ports:
             - "8888:8888"
 
-    # neovim_python:
-    #     image: "u1and0/pyenv:latest"
-    #     tty: "true"
-    #     volumes:
-    #         - "${HOME}:/home/vagrant"
-    #         - "/mnt/e/Users/U1and0:/mnt"
-    #     working_dir: "/home/vagrant/Dropbox/Program/python"
-    #     environment:
-    #         - "HOST=py"
-    #     # command: "bash -c 'source /root/.pyenvrc && source activate && bash'"
-
     vimgo:
         # update current binary image (!! Not coded infra !!)
-        image: "u1and0/vim-go:zplug1.2.0-r1"
-        tty: "true"
-        working_dir: "/root/go/src"
+        image: "u1and0/vim-go:latest"
+        tty: true
         volumes:
-            - "${HOME}:/home/vagrant"
-            - "${HOME}/.zsh_history:/root/.zsh_history"
-            - "${HOME}/yankring_history_v2.txt:/root/yankring_history_v2.txt"
+            - "${HOME}/Dropbox:/home/u1and0/Dropbox"
+            - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
+            - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
             - "/mnt/e/Users/U1and0:/mnt"
         environment:
-            - "GO111MODULE=on"
-            - "HOST=go"
+            - "HOST=vim-go"
+            - "GOPATH=/home/u1and0/go"
+        working_dir: "$GOPATH"
         ports:
             - "8080:8080"
         cap_add:
