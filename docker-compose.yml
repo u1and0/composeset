@@ -32,10 +32,11 @@ services:
         image: "u1and0/docker:latest"
         tty: true
         volumes:
+            - "${HOME}:/home/u1and0/home"
             - "${HOME}/Dropbox:/home/u1and0/Dropbox"
             - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
             - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
-            - "/mnt/e/Users/U1and0:/mnt"
+            - "/mnt/e/Users/U1and0:/mnt/e"
             - "/var/run/docker.sock:/var/run/docker.sock"
         restart: "always"
         environment:
@@ -46,10 +47,11 @@ services:
         # [Jupyter on Dockerでパスワードの設定方法が分からないあなたへ](https://qiita.com/Yusuke-Shimizu/items/731ca71b3c4c3649ec7f)
         image: "u1and0/python-conda:latest"
         volumes:
+            - "${HOME}:/home/u1and0/home"
             - "${HOME}/Dropbox:/home/u1and0/Dropbox"
             - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
             - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
-            - "/mnt/e/Users/U1and0/Dropbox:/mnt"
+            - "/mnt/e/Users/U1and0:/mnt/e"
         environment:
             - "PYTHONPATH=/home/u1and0/Dropbox/Program/python"
             - "HOST=conda"
@@ -58,17 +60,17 @@ services:
             - "8888:8888"
 
     vimgo:
-        # update current binary image (!! Not coded infra !!)
         image: "u1and0/vim-go:latest"
         tty: true
         volumes:
+            - "${HOME}:/home/u1and0/home"
             - "${HOME}/Dropbox:/home/u1and0/Dropbox"
             - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
             - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
-            - "/mnt/e/Users/U1and0:/mnt"
+            - "/mnt/e/Users/U1and0:/mnt/e"
         environment:
             - "HOST=vim-go"
-            - "GOPATH=/home/u1and0/go"
+            # - "GOPATH=/home/u1and0/go"
         working_dir: "$GOPATH"
         ports:
             - "8080:8080"
