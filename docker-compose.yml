@@ -25,6 +25,18 @@
 #    # Login python env as ipython
 # 	 $ docker exec -it composeset_jupyter_1 bash -c ". .bashrc && ipython"
 #
+#    # Setup git after login
+#    $ git stash
+#    $ git fetch
+#    $ git checkout origin/develop
+#    $ git switch -c develop
+#    $ git stash pop
+#       for shortly
+#    $ gst && g fetch && gch origin/develop && g switch -c develop && gst pop
+#
+#    # Setup pacman after login
+#    $ pacman -Sy archlinux-keyring
+#    $ pacman -Syu
 version: '3'
 services:
 
@@ -41,6 +53,8 @@ services:
         restart: "always"
         environment:
             - "HOST=master"
+        ports:
+            - "8000:8000"
 
     jupyter:
         # jupyter tagはpasswordを設定したイメージ
@@ -57,7 +71,8 @@ services:
             - "HOST=conda"
         command: "bash -c '. .bashrc && jupyter notebook'"
         ports:
-            - "8888:8888"
+            - "8888:8888"  # jupyter notebook
+            - "8880:8880"  # plotly dash
 
     vimgo:
         image: "u1and0/vim-go:latest"
@@ -77,7 +92,16 @@ services:
         cap_add:
             - "SYS_PTRACE" # for golang debugger
 
-    # uplot:
-    #     image: "u1and0/uplot:latest"
-    #     ports:
-    #         - "8880:8880"
+    rust:
+        image: "u1and0/rust:latest"
+        tty: true
+        volumes:
+            - "${HOME}:/home/u1and0/home"
+            - "${HOME}/Dropbox:/home/u1and0/Dropbox"
+            - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
+            - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
+            - "/mnt/e/Users/U1and0:/mnt/e"
+        environment:
+            - "HOST=rust"
+        ports:
+            - "8089:8089"
