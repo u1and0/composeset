@@ -22,31 +22,28 @@ DAY = datetime.strftime(datetime.today(), '%Y%m%d')
 
 
 def main():
+    """Build docker images"""
     for image, dirname in IMAGES.items():
         try:
             # PULL
-            pllcmd = ["sudo", "docker", "pull", f"{BASE_IMAGE}"]
+            pllcmd = f"sudo docker pull {BASE_IMAGE}".split()
             run_command(pllcmd)
 
             # BUILD
-            bldcmd = [
-                "sudo", "docker", "build", "--no-cache", "-t",
-                f"{USER}/{image}", f"../{dirname}"
-            ]
+            bldcmd = f"sudo docker build --no-cache \
+                -t {USER}/{image} ../{dirname}".split()
             run_command(bldcmd)
 
             # TAG
-            tagcmd = [
-                "sudo", "docker", "tag", f"{USER}/{image}:latest",
-                f"{USER}/{image}:{DAY}"
-            ]
+            tagcmd = f"sudo docker tag \
+                {USER}/{image}:latest {USER}/{image}:{DAY}".split()
             run_command(tagcmd)
             print(f"Successfully tagged {USER}/{image}:{DAY}")
 
             # PUSH
             pushcmds = [
-                ["sudo", "docker", "push", f"{USER}/{image}:latest"],
-                ["sudo", "docker", "push", f"{USER}/{image}:{DAY}"],
+                f"sudo docker push {USER}/{image}:latest".split(),
+                f"sudo docker push {USER}/{image}:{DAY}".split(),
             ]
             for pushcmd in pushcmds:
                 run_command(pushcmd)
@@ -55,6 +52,7 @@ def main():
 
 
 def run_command(cmd: list) -> subprocess.CompletedProcess:
+    """Run docker command"""
     res = subprocess.run(cmd,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT,
