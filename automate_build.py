@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# build docker images
+#!/usr/bin/env python3
+"""Auto build my docker images"""
 
 import sys
 from datetime import datetime
@@ -24,31 +24,24 @@ DAY = datetime.strftime(datetime.today(), '%Y%m%d')
 def main():
     """Build docker images"""
     for image, dirname in IMAGES.items():
-        try:
+        cmds = [
             # PULL
-            pllcmd = f"sudo docker pull {BASE_IMAGE}".split()
-            run_command(pllcmd)
-
+            f"sudo docker pull {BASE_IMAGE}",
             # BUILD
-            bldcmd = f"sudo docker build --no-cache \
-                -t {USER}/{image} ../{dirname}".split()
-            run_command(bldcmd)
-
+            f"sudo docker build --no-cache -t {USER}/{image} ../{dirname}",
             # TAG
-            tagcmd = f"sudo docker tag \
-                {USER}/{image}:latest {USER}/{image}:{DAY}".split()
-            run_command(tagcmd)
-            print(f"Successfully tagged {USER}/{image}:{DAY}")
-
+            f"sudo docker tag {USER}/{image}:latest {USER}/{image}:{DAY}",
             # PUSH
-            pushcmds = [
-                f"sudo docker push {USER}/{image}:latest".split(),
-                f"sudo docker push {USER}/{image}:{DAY}".split(),
-            ]
-            for pushcmd in pushcmds:
-                run_command(pushcmd)
-        except subprocess.CalledProcessError as err:
-            sys.exit(err)
+            f"sudo docker push {USER}/{image}:latest",
+            f"sudo docker push {USER}/{image}:{DAY}",
+        ]
+        for i, cmd in enumerate(cmds):
+            try:
+                run_command(cmd.split())
+                if i == 2:
+                    print(f"Successfully tagged {USER}/{image}:{DAY}")
+            except subprocess.CalledProcessError as err:
+                sys.exit(err)
 
 
 def run_command(cmd: list) -> subprocess.CompletedProcess:
