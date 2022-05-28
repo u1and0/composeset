@@ -14,9 +14,10 @@ IMAGES = {
     "neovim": "docker_neovim_env",
     "zplug": "docker_zplug",
     "docker": "docker_docker",
+    "deno": "docker_deno",
     "vim-go": "docker_vim-go",
     "python-conda": "docker_python-conda",
-    "rust": "docker_rust_env",
+    # "rust": "docker_rust_env",
 }
 DAY = datetime.strftime(datetime.today(), '%Y%m%d')
 
