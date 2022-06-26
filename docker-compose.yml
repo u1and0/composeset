@@ -103,3 +103,17 @@ services:
             - "HOST=rust"
         ports:
             - "8089:8089"
+
+    nim:
+        image: "u1and0/nim:latest"
+        tty: true
+        volumes:
+            - "/home/u1and0:/home/u1and0/home"
+            - "/home/u1and0/Dropbox:/home/u1and0/Dropbox"
+            - "/home/u1and0/.zsh_history:/home/u1and0/.zsh_history"
+            - "/home/u1and0/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
+            - "/mnt/e/Users/U1and0:/mnt/e"
+        environment:
+            - "HOST=nim"
+        ports:
+            - "3333:3333"
