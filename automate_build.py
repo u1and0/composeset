@@ -18,6 +18,7 @@ IMAGES = {
     "vim-go": "docker_vim-go",
     "python-conda": "docker_python-conda",
     # "rust": "docker_rust_env",
+    "nim": "docker-nim",
 }
 DAY = datetime.strftime(datetime.today(), '%Y%m%d')
 
