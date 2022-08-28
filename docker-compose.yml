@@ -104,6 +104,20 @@ services:
         ports:
             - "8089:8089"
 
+    deno:
+        image: "u1and0/deno:latest"
+        tty: true
+        volumes:
+            - "${HOME}:/home/u1and0/home"
+            - "${HOME}/Dropbox:/home/u1and0/Dropbox"
+            - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
+            - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
+            - "/mnt/e/Users/U1and0:/mnt/e"
+        environment:
+            - "HOST=deno"
+        ports:
+            - "3000:3000"
+
     nim:
         image: "u1and0/nim:latest"
         tty: true
