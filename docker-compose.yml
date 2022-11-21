@@ -60,16 +60,17 @@ services:
         # jupyter tagはpasswordを設定したイメージ
         # [Jupyter on Dockerでパスワードの設定方法が分からないあなたへ](https://qiita.com/Yusuke-Shimizu/items/731ca71b3c4c3649ec7f)
         image: "u1and0/python-conda:latest"
+        tty: true
         volumes:
-            - "${HOME}:/home/u1and0/home"
-            - "${HOME}/Dropbox:/home/u1and0/Dropbox"
-            - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
-            - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
+            - "/home/u1and0:/home/u1and0/home"
+            - "/home/u1and0/Dropbox:/home/u1and0/Dropbox"
+            - "/home/u1and0/.zsh_history:/home/u1and0/.zsh_history"
+            - "/home/u1and0/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
             - "/mnt/e/Users/U1and0:/mnt/e"
         environment:
             - "PYTHONPATH=/home/u1and0/Dropbox/Program/python"
             - "HOST=conda"
-        command: "bash -c '. .bashrc && jupyter notebook'"
+        # command: "bash -c '. .bashrc && jupyter notebook'"
         ports:
             - "8888:8888"  # jupyter notebook
             - "8880:8880"  # plotly dash
@@ -90,28 +91,28 @@ services:
         cap_add:
             - "SYS_PTRACE" # for golang debugger
 
-    rust:
-        image: "u1and0/rust:latest"
-        tty: true
-        volumes:
-            - "${HOME}:/home/u1and0/home"
-            - "${HOME}/Dropbox:/home/u1and0/Dropbox"
-            - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
-            - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
-            - "/mnt/e/Users/U1and0:/mnt/e"
-        environment:
-            - "HOST=rust"
-        ports:
-            - "8089:8089"
+    # rust:
+    #     image: "u1and0/rust:latest"
+    #     tty: true
+    #     volumes:
+    #         - "${HOME}:/home/u1and0/home"
+    #         - "${HOME}/Dropbox:/home/u1and0/Dropbox"
+    #         - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
+    #         - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
+    #         - "/mnt/e/Users/U1and0:/mnt/e"
+    #     environment:
+    #         - "HOST=rust"
+    #     ports:
+    #         - "8089:8089"
 
     deno:
         image: "u1and0/deno:latest"
         tty: true
         volumes:
-            - "${HOME}:/home/u1and0/home"
-            - "${HOME}/Dropbox:/home/u1and0/Dropbox"
-            - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
-            - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
+            - "/home/u1and0:/home/u1and0/home"
+            - "/home/u1and0/Dropbox:/home/u1and0/Dropbox"
+            - "/home/u1and0/.zsh_history:/home/u1and0/.zsh_history"
+            - "/home/u1and0/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
             - "/mnt/e/Users/U1and0:/mnt/e"
         environment:
             - "HOST=deno"
@@ -131,3 +132,4 @@ services:
             - "HOST=nim"
         ports:
             - "3333:3333"
+            - "8889:8888" # jupyter notebook

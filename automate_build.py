@@ -22,9 +22,32 @@ IMAGES = {
 }
 DAY = datetime.strftime(datetime.today(), '%Y%m%d')
 
+def init():
+    """mirrorlist initialize"""
+    cmd = [
+            "reflector",
+            "--verbose",
+            "--country",
+            "Japan",
+            "--age",
+            "48",
+            "--protocol",
+            "https",
+            "--protocol",
+            "rsync",
+            "--sort",
+            "rate",
+            "--save",
+            "../docker_archlinux_env/mirrorlist",
+           ]
+    try:
+        run_command(cmd)
+    except subprocess.CalledProcessError as err:
+        sys.exit(err)
 
 def main():
     """Build docker images"""
+    success_count:int = 0
     for image, dirname in IMAGES.items():
         cmds = [
             # PULL
@@ -40,10 +63,12 @@ def main():
         for i, cmd in enumerate(cmds):
             try:
                 run_command(cmd.split())
-                if i == 2:
+                if i == 2:  # `docker tag` command succeed message
                     print(f"Successfully tagged {USER}/{image}:{DAY}")
             except subprocess.CalledProcessError as err:
                 sys.exit(err)
+        success_count += 1
+    print(f"Succeeded build images ({success_count}/{len(IMAGES)})")
 
 
 def run_command(cmd: list) -> subprocess.CompletedProcess:
@@ -57,4 +82,5 @@ def run_command(cmd: list) -> subprocess.CompletedProcess:
 
 
 if __name__ == "__main__":
+    init()
     main()
