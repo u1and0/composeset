@@ -76,16 +76,16 @@ services:
             - "8880:8880"  # plotly dash
 
     vimgo:
-        image: "u1and0/vim-go:latest"
+        image: "u1and0/vimgo:latest"
         tty: true
         volumes:
-            - "${HOME}:/home/u1and0/home"
-            - "${HOME}/Dropbox:/home/u1and0/Dropbox"
-            - "${HOME}/.zsh_history:/home/u1and0/.zsh_history"
-            - "${HOME}/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
+            - "/home/u1and0:/home/u1and0/home"
+            - "/home/u1and0/Dropbox:/home/u1and0/Dropbox"
+            - "/home/u1and0/.zsh_history:/home/u1and0/.zsh_history"
+            - "/home/u1and0/yankring_history_v2.txt:/home/u1and0/yankring_history_v2.txt"
             - "/mnt/e/Users/U1and0:/mnt/e"
         environment:
-            - "HOST=vim-go"
+            - "HOST=vimgo"
         ports:
             - "8080:8080"
         cap_add:
